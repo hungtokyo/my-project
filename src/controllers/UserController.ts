@@ -8,11 +8,12 @@ class UserController{
 
 static listAll = async (req: Request, res: Response) => {
   //Get users from database
+  
   const userRepository = getRepository(User);
+  
   const users = await userRepository.find({
     select: ["id", "username", "role"] //We dont want to send the passwords on response
   });
-
   //Send the users object
   res.send(users);
 };
@@ -34,12 +35,14 @@ static getOneById = async (req: Request, res: Response) => {
 
 static newUser = async (req: Request, res: Response) => {
   //Get parameters from the body
-  console.log(req.body)
+  console.log( 'newUser: ',req.body)
   let { username, password, role } = req.body;
   let user = new User();
   user.username = username;
   user.password = password;
   user.role = role;
+  console.log(user);
+  
 
   //Validade if the parameters are ok
   const errors = await validate(user);
@@ -67,6 +70,8 @@ static newUser = async (req: Request, res: Response) => {
 static editUser = async (req: Request, res: Response) => {
   //Get the ID from the url
   const id = req.params.id;
+  console.log(req.body);
+  
 
   //Get values from the body
   const { username, role } = req.body;
@@ -85,6 +90,8 @@ static editUser = async (req: Request, res: Response) => {
   //Validate the new values on model
   user.username = username;
   user.role = role;
+  console.log(user);
+  
   const errors = await validate(user);
   if (errors.length > 0) {
     res.status(400).send(errors);

@@ -9,6 +9,8 @@ import config from "../config/config";
 class AuthController {
   static login = async (req: Request, res: Response) => {
     //Check if username and password are set
+    console.log(req.body);
+    
     let { username, password } = req.body;
     if (!(username && password)) {
       res.status(400).send();
@@ -20,10 +22,9 @@ class AuthController {
     let user: User;
     try {
       user = await userRepository.findOneOrFail({ where: { username } });
-      console.log(user);
       
     } catch (error) {
-      res.status(401).send();
+      res.status(401).send('Username or password is incorrect');
     }
 
     //Check if encrypted password match
@@ -42,7 +43,13 @@ class AuthController {
     );
 
     //Send the jwt in the response
-    res.send(token);
+    let responseJson = {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      token: token
+  };
+    res.send(responseJson);
   };
 
   static changePassword = async (req: Request, res: Response) => {

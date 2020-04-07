@@ -36,13 +36,13 @@ const user = [
   {
     method: "get",
     route: "/user",
-    middleware: [],
+    middleware: [checkJwt, checkRole(["admin"])],
     action: UserController.listAll
   },
   {
     method: "delete",
     route: "/user/:id([0-9]+)",
-    middleware: [],
+    middleware: [checkJwt, checkRole(["admin"])],
     action: UserController.deleteUser
   },
   {
@@ -54,7 +54,7 @@ const user = [
   {
     method: "put",
     route: "/user/profile/:id",
-    middleware: [],
+    middleware: [checkJwt, checkRole(["admin"])],
     action: UserController.editUser
   },
   
